@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Offene Geisternetze</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; color: #333; }
+        h1 { color: #2c3e50; text-align: center; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .btnlink {
+            display: inline-block;
+            padding: 10px 14px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btnlink:hover { background-color: #2980b9; }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            vertical-align: top;
+        }
+        .table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .status { font-weight: bold; }
+        .status.gemeldet { color: #2c3e50; }
+        .status.bevorstehend { color: #d35400; }
+
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn.primary { background-color: #3498db; color: white; }
+        .btn.primary:hover { background-color: #2980b9; }
+        .btn.success { background-color: #27ae60; color: white; }
+        .btn.success:hover { background-color: #1e8a4c; }
+        .btn.danger { background-color: #e74c3c; color: white; }
+        .btn.danger:hover { background-color: #c0392b; }
+
+        .hint { text-align: center; color: #666; margin-top: 10px; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="container">
+
+        <h1>Offene Geisternetze</h1>
+
+        <div class="topbar">
+            <h:link outcome="index.xhtml" styleClass="btnlink">← Zur Startseite</h:link>
+            <h:link outcome="melden.xhtml" styleClass="btnlink">+ Neues Netz melden</h:link>
+        </div>
+
+        <h:messages globalOnly="true"
+                    infoStyle="color:#1e6b35; background:#eaf7ee; padding:10px; border-radius:6px; display:block; margin-bottom:15px;"
+                    errorStyle="color:#8a1f1f; background:#fff4f4; padding:10px; border-radius:6px; display:block; margin-bottom:15px;" />
+
+        <h:dataTable value="#{meldBean.offeneNetze}"
+                     var="netz"
+                     rendered="#{not empty meldBean.offeneNetze}"
+                     styleClass="table">
+
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{netz.id}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Standort</f:facet>
+                Lat: #{netz.lat}<br/>
+                Lng: #{netz.lng}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Größe</f:facet>
+                #{netz.geschaetzteGroesse} m²
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Status</f:facet>
+
+                <h:panelGroup rendered="#{netz.status == 'GEMELDET'}">
+                    <span class="status gemeldet">GEMELDET</span>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{netz.status == 'BERGUNG_BEVORSTEHEND'}">
+                    <span class="status bevorstehend">BERGUNG BEVORSTEHEND</span>
+                </h:panelGroup>
+
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Aktionen</f:facet>
+
+                <div class="actions">
+
+                    <h:panelGroup rendered="#{netz.status == 'GEMELDET'}">
+                        <h:button value="Eintragen" outcome="eintragen" styleClass="btn primary">
+                            <f:param name="netzId" value="#{netz.id}" />
+                        </h:button>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{netz.status == 'BERGUNG_BEVORSTEHEND'}">
+                        <h:form style="display:inline;">
+                            <h:commandButton value="Geborgen melden"
+                                             action="#{meldBean.geborgenMelden(netz.id)}"
+                                             styleClass="btn success"/>
+                        </h:form>
+                    </h:panelGroup>
+
+                    <h:button value="Verschollen melden" outcome="verschollen" styleClass="btn danger">
+                        <f:param name="netzId" value="#{netz.id}" />
+                    </h:button>
+
+                </div>
+
+            </h:column>
+
+        </h:dataTable>
+
+        <h:panelGroup rendered="#{empty meldBean.offeneNetze}">
+            <p class="hint">Keine offenen Netze vorhanden.</p>
+        </h:panelGroup>
+
+    </div>
+</h:body>
+</html>

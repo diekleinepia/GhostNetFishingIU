@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+>
+<h:head>
+    <title>Ghost Net Fishing</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; color: #333; }
+        h1 { color: #2c3e50; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .menu { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .menu a {
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .menu a:hover { background-color: #2980b9; }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <h1>Willkommen bei Ghost Net Fishing</h1>
+        <p style="text-align: center;">Die Plattform zum Melden und Bergen herrenloser Fischernetze im Meer</p>
+
+        <div class="menu">
+            <h:link outcome="melden.xhtml">
+                Neues Geisternetz melden (anonym)
+            </h:link>
+
+            <h:link outcome="offeneNetze.xhtml">
+                Offene Netze ansehen
+            </h:link>
+        </div>
+    </div>
+</h:body>
+</html>
